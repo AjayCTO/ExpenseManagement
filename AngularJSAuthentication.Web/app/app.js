@@ -38,6 +38,16 @@ app.config(function ($routeProvider) {
         templateUrl: "/app/views/associate.html"
     });
 
+    $routeProvider.when("/usersignup", {
+        controller: "UserSignUpController",
+        templateUrl: "/app/views/UserSignUp.html"
+    });
+
+    $routeProvider.when("/Userlogin", {
+        controller: "UserLoginController",
+        templateUrl: "/app/views/UserLogin.html"
+    });
+
     $routeProvider.otherwise({ redirectTo: "/home" });
 
 });

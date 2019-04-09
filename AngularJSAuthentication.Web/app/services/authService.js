@@ -26,6 +26,48 @@ app.factory('authService', ['$http', '$q', 'localStorageService', 'ngAuthSetting
 
     };
 
+
+    var _saveUserRegistration = function (registration) {
+
+        _logOut();
+
+        return $http.post(serviceBase + 'api/User/PostUser', registration).then(function (response) {
+            return response;
+        });
+
+    };
+
+
+
+
+    var _Userlogin = function (loginData) {
+
+        alert("in get");
+
+        return $http.get(serviceBase + 'api/User/GetUser', loginData).then(function (response) {
+
+            console.log("=============response=============")
+            console.log(response)
+            console.log("=============response=============")
+            var deferred = $q.defer();
+            if (loginData.useRefreshTokens) {
+                localStorageService.set('UserauthorizationData', { token: response.access_token, userName: loginData.userName, refreshToken: response.refresh_token, useRefreshTokens: true });
+            }
+            else {
+                localStorageService.set('UserauthorizationData', { token: response.access_token, userName: loginData.userName, refreshToken: "", useRefreshTokens: false });
+            }
+            _authentication.isAuth = true;
+            _authentication.userName = loginData.userName;
+            _authentication.useRefreshTokens = loginData.useRefreshTokens;
+
+            deferred.resolve(response);
+        });
+
+        return deferred.promise;
+
+    };
+
+
     var _login = function (loginData) {
 
         var data = "grant_type=password&username=" + loginData.userName + "&password=" + loginData.password;
@@ -58,6 +100,13 @@ app.factory('authService', ['$http', '$q', 'localStorageService', 'ngAuthSetting
         return deferred.promise;
 
     };
+
+
+
+
+
+
+
 
     var _logOut = function () {
 
@@ -156,7 +205,9 @@ app.factory('authService', ['$http', '$q', 'localStorageService', 'ngAuthSetting
     };
 
     authServiceFactory.saveRegistration = _saveRegistration;
+    authServiceFactory.saveUserRegistration = _saveUserRegistration;
     authServiceFactory.login = _login;
+    authServiceFactory.Userlogin = _Userlogin;
     authServiceFactory.logOut = _logOut;
     authServiceFactory.fillAuthData = _fillAuthData;
     authServiceFactory.authentication = _authentication;

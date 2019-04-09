@@ -4,23 +4,24 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="ExpenseManagementModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="ExpenseManagementModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Asset">
           <Key>
             <PropertyRef Name="AssetID" />
           </Key>
-          <Property Name="AssetID" Type="smallint" Nullable="false" />
+          <Property Name="AssetID" Type="smallint" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="ProjectID" Type="smallint" />
           <Property Name="Name" Type="nvarchar" MaxLength="50" />
           <Property Name="Contact" Type="nvarchar" MaxLength="50" />
           <Property Name="Address" Type="nvarchar" MaxLength="200" />
           <Property Name="Business" Type="nvarchar" MaxLength="100" />
+          <Property Name="UserID" Type="smallint" />
         </EntityType>
         <EntityType Name="Category">
           <Key>
             <PropertyRef Name="CategoryID" />
           </Key>
-          <Property Name="CategoryID" Type="smallint" Nullable="false" />
+          <Property Name="CategoryID" Type="smallint" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="ProjectID" Type="smallint" />
           <Property Name="Name" Type="nvarchar" MaxLength="50" />
           <Property Name="Description" Type="nvarchar" MaxLength="200" />
@@ -29,7 +30,7 @@
           <Key>
             <PropertyRef Name="ExpenseID" />
           </Key>
-          <Property Name="ExpenseID" Type="smallint" Nullable="false" />
+          <Property Name="ExpenseID" Type="smallint" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="ProjectID" Type="smallint" />
           <Property Name="Date" Type="datetime" />
           <Property Name="AssetID" Type="smallint" />
@@ -44,7 +45,7 @@
           <Key>
             <PropertyRef Name="IncomeID" />
           </Key>
-          <Property Name="IncomeID" Type="smallint" Nullable="false" />
+          <Property Name="IncomeID" Type="smallint" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="ProjectID" Type="smallint" />
           <Property Name="SourceName" Type="nvarchar" MaxLength="50" />
           <Property Name="Amount" Type="decimal" Precision="18" Scale="0" />
@@ -54,7 +55,7 @@
           <Key>
             <PropertyRef Name="ProjectID" />
           </Key>
-          <Property Name="ProjectID" Type="smallint" Nullable="false" />
+          <Property Name="ProjectID" Type="smallint" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Name" Type="nvarchar" MaxLength="100" />
           <Property Name="BillingMethod" Type="nvarchar" MaxLength="100" />
           <Property Name="CustomerName" Type="nvarchar" MaxLength="50" />
@@ -74,13 +75,15 @@
           <Key>
             <PropertyRef Name="UserID" />
           </Key>
-          <Property Name="UserID" Type="smallint" Nullable="false" />
+          <Property Name="UserID" Type="smallint" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="ProjectID" Type="smallint" />
           <Property Name="Name" Type="nvarchar" MaxLength="50" />
           <Property Name="Contact" Type="nvarchar" MaxLength="50" />
           <Property Name="Address" Type="nvarchar" MaxLength="200" />
           <Property Name="Role" Type="nvarchar" MaxLength="50" />
           <Property Name="LastLogin" Type="datetime" />
+          <Property Name="EmailAddress" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Password" Type="nvarchar" MaxLength="50" Nullable="false" />
         </EntityType>
         <Association Name="FK_Asset_Project">
           <End Role="Project" Type="Self.Project" Multiplicity="0..1" />
@@ -94,6 +97,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Asset_User">
+          <End Role="User" Type="Self.User" Multiplicity="0..1" />
+          <End Role="Asset" Type="Self.Asset" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="Asset">
+              <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Category_Project">
           <End Role="Project" Type="Self.Project" Multiplicity="0..1" />
           <End Role="Category" Type="Self.Category" Multiplicity="*" />
@@ -103,6 +118,30 @@
             </Principal>
             <Dependent Role="Category">
               <PropertyRef Name="ProjectID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Expense_Asset">
+          <End Role="Asset" Type="Self.Asset" Multiplicity="0..1" />
+          <End Role="Expense" Type="Self.Expense" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Asset">
+              <PropertyRef Name="AssetID" />
+            </Principal>
+            <Dependent Role="Expense">
+              <PropertyRef Name="AssetID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Expense_Category">
+          <End Role="Category" Type="Self.Category" Multiplicity="0..1" />
+          <End Role="Expense" Type="Self.Expense" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Category">
+              <PropertyRef Name="CategoryID" />
+            </Principal>
+            <Dependent Role="Expense">
+              <PropertyRef Name="CategoryID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -154,9 +193,21 @@
             <End Role="Project" EntitySet="Project" />
             <End Role="Asset" EntitySet="Asset" />
           </AssociationSet>
+          <AssociationSet Name="FK_Asset_User" Association="Self.FK_Asset_User">
+            <End Role="User" EntitySet="User" />
+            <End Role="Asset" EntitySet="Asset" />
+          </AssociationSet>
           <AssociationSet Name="FK_Category_Project" Association="Self.FK_Category_Project">
             <End Role="Project" EntitySet="Project" />
             <End Role="Category" EntitySet="Category" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Expense_Asset" Association="Self.FK_Expense_Asset">
+            <End Role="Asset" EntitySet="Asset" />
+            <End Role="Expense" EntitySet="Expense" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Expense_Category" Association="Self.FK_Expense_Category">
+            <End Role="Category" EntitySet="Category" />
+            <End Role="Expense" EntitySet="Expense" />
           </AssociationSet>
           <AssociationSet Name="FK_Expense_Project" Association="Self.FK_Expense_Project">
             <End Role="Project" EntitySet="Project" />
@@ -171,8 +222,7 @@
             <End Role="User" EntitySet="User" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="ExpenseManagementModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -187,6 +237,9 @@
           <Property Name="Address" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
           <Property Name="Business" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Project" Relationship="Self.FK_Asset_Project" FromRole="Asset" ToRole="Project" />
+          <Property Name="UserID" Type="Int16" />
+          <NavigationProperty Name="User" Relationship="ExpenseManagementModel.FK_Asset_User" FromRole="Asset" ToRole="User" />
+          <NavigationProperty Name="Expense" Relationship="ExpenseManagementModel.FK_Expense_Asset" FromRole="Asset" ToRole="Expense" />
         </EntityType>
         <EntityType Name="Category">
           <Key>
@@ -197,6 +250,7 @@
           <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Description" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Project" Relationship="Self.FK_Category_Project" FromRole="Category" ToRole="Project" />
+          <NavigationProperty Name="Expense" Relationship="ExpenseManagementModel.FK_Expense_Category" FromRole="Category" ToRole="Expense" />
         </EntityType>
         <EntityType Name="Expense">
           <Key>
@@ -213,6 +267,8 @@
           <Property Name="IsApproved" Type="Boolean" />
           <Property Name="ReceiptPath" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Project" Relationship="Self.FK_Expense_Project" FromRole="Expense" ToRole="Project" />
+          <NavigationProperty Name="Asset" Relationship="ExpenseManagementModel.FK_Expense_Asset" FromRole="Expense" ToRole="Asset" />
+          <NavigationProperty Name="Category" Relationship="ExpenseManagementModel.FK_Expense_Category" FromRole="Expense" ToRole="Category" />
         </EntityType>
         <EntityType Name="Incoming">
           <Key>
@@ -262,6 +318,9 @@
           <Property Name="Role" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="LastLogin" Type="DateTime" Precision="3" />
           <NavigationProperty Name="Project" Relationship="Self.FK_User_Project" FromRole="User" ToRole="Project" />
+          <NavigationProperty Name="Asset" Relationship="ExpenseManagementModel.FK_Asset_User" FromRole="User" ToRole="Asset" />
+          <Property Name="EmailAddress" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Password" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
         </EntityType>
         <Association Name="FK_Asset_Project">
           <End Role="Project" Type="Self.Project" Multiplicity="0..1" />
@@ -351,7 +410,55 @@
             <End Role="Project" EntitySet="Project" />
             <End Role="User" EntitySet="User" />
           </AssociationSet>
+          <AssociationSet Name="FK_Asset_User" Association="ExpenseManagementModel.FK_Asset_User">
+            <End Role="User" EntitySet="User" />
+            <End Role="Asset" EntitySet="Asset" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Expense_Asset" Association="ExpenseManagementModel.FK_Expense_Asset">
+            <End Role="Asset" EntitySet="Asset" />
+            <End Role="Expense" EntitySet="Expense" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Expense_Category" Association="ExpenseManagementModel.FK_Expense_Category">
+            <End Role="Category" EntitySet="Category" />
+            <End Role="Expense" EntitySet="Expense" />
+          </AssociationSet>
         </EntityContainer>
+        <Association Name="FK_Asset_User">
+          <End Type="ExpenseManagementModel.User" Role="User" Multiplicity="0..1" />
+          <End Type="ExpenseManagementModel.Asset" Role="Asset" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="Asset">
+              <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Expense_Asset">
+          <End Type="ExpenseManagementModel.Asset" Role="Asset" Multiplicity="0..1" />
+          <End Type="ExpenseManagementModel.Expense" Role="Expense" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Asset">
+              <PropertyRef Name="AssetID" />
+            </Principal>
+            <Dependent Role="Expense">
+              <PropertyRef Name="AssetID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Expense_Category">
+          <End Type="ExpenseManagementModel.Category" Role="Category" Multiplicity="0..1" />
+          <End Type="ExpenseManagementModel.Expense" Role="Expense" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Category">
+              <PropertyRef Name="CategoryID" />
+            </Principal>
+            <Dependent Role="Expense">
+              <PropertyRef Name="CategoryID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -361,6 +468,7 @@
           <EntitySetMapping Name="Asset">
             <EntityTypeMapping TypeName="ExpenseManagementModel.Asset">
               <MappingFragment StoreEntitySet="Asset">
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
                 <ScalarProperty Name="AssetID" ColumnName="AssetID" />
                 <ScalarProperty Name="ProjectID" ColumnName="ProjectID" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
@@ -432,6 +540,8 @@
           <EntitySetMapping Name="User">
             <EntityTypeMapping TypeName="ExpenseManagementModel.User">
               <MappingFragment StoreEntitySet="User">
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="EmailAddress" ColumnName="EmailAddress" />
                 <ScalarProperty Name="UserID" ColumnName="UserID" />
                 <ScalarProperty Name="ProjectID" ColumnName="ProjectID" />
                 <ScalarProperty Name="Name" ColumnName="Name" />

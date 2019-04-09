@@ -25,9 +25,9 @@ namespace AngularJSAuthentication.API.Controllers
 
         // GET api/User/5
         [ResponseType(typeof(User))]
-        public async Task<IHttpActionResult> GetUser(short id)
+        public async Task<IHttpActionResult> GetUser(string EmailAddress)
         {
-            User user = await db.User.FindAsync(id);
+            User user = await db.User.FindAsync(EmailAddress);
             if (user == null)
             {
                 return NotFound();
@@ -35,6 +35,7 @@ namespace AngularJSAuthentication.API.Controllers
 
             return Ok(user);
         }
+        
 
         // PUT api/User/5
         public async Task<IHttpActionResult> PutUser(short id, User user)

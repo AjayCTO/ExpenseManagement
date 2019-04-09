@@ -8,15 +8,18 @@
         <EntityTypeShape EntityType="ExpenseManagementModel.Asset" Width="1.5" PointX="0.5" PointY="0.5" IsExpanded="true" />
         <EntityTypeShape EntityType="ExpenseManagementModel.Category" Width="1.5" PointX="2.75" PointY="0.5" IsExpanded="true" />
         <EntityTypeShape EntityType="ExpenseManagementModel.Expense" Width="1.5" PointX="0.75" PointY="3.875" IsExpanded="true" />
-        <EntityTypeShape EntityType="ExpenseManagementModel.Incoming" Width="1.5" PointX="5.125" PointY="3.875" IsExpanded="true" />
-        <EntityTypeShape EntityType="ExpenseManagementModel.Project" Width="1.5" PointX="3" PointY="4" IsExpanded="true" />
-        <EntityTypeShape EntityType="ExpenseManagementModel.sysdiagrams" Width="1.5" PointX="7.875" PointY="1.375" IsExpanded="true" />
-        <EntityTypeShape EntityType="ExpenseManagementModel.User" Width="1.5" PointX="5.25" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="ExpenseManagementModel.Incoming" Width="1.5" PointX="6.625" PointY="4.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="ExpenseManagementModel.Project" Width="1.5" PointX="4.125" PointY="4.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="ExpenseManagementModel.sysdiagrams" Width="1.5" PointX="9.125" PointY="2.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="ExpenseManagementModel.User" Width="1.5" PointX="6.375" PointY="0.5" IsExpanded="true" />
         <AssociationConnector Association="ExpenseManagementModel.FK_Asset_Project" ManuallyRouted="false" />
         <AssociationConnector Association="ExpenseManagementModel.FK_Category_Project" ManuallyRouted="false" />
         <AssociationConnector Association="ExpenseManagementModel.FK_Expense_Project" ManuallyRouted="false" />
         <AssociationConnector Association="ExpenseManagementModel.FK_Incoming_Project" ManuallyRouted="false" />
         <AssociationConnector Association="ExpenseManagementModel.FK_User_Project" ManuallyRouted="false" />
+        <AssociationConnector Association="ExpenseManagementModel.FK_Asset_User" />
+        <AssociationConnector Association="ExpenseManagementModel.FK_Expense_Asset" />
+        <AssociationConnector Association="ExpenseManagementModel.FK_Expense_Category" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

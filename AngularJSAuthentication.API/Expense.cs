@@ -26,5 +26,7 @@ namespace AngularJSAuthentication.API
         public string ReceiptPath { get; set; }
     
         public virtual Project Project { get; set; }
+        public virtual Asset Asset { get; set; }
+        public virtual Category Category { get; set; }
     }
 }
