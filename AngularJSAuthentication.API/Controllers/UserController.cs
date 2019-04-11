@@ -18,13 +18,17 @@ namespace AngularJSAuthentication.API.Controllers
         private ExpenseManagementEntities db = new ExpenseManagementEntities();
 
         // GET api/User
-        public IQueryable<User> GetUser()
-        {
-            return db.User;
-        }
+        //public IQueryable<User> GetUser()
+        //{
+        //    return db.User;
+        //}
 
         // GET api/User/5
         [ResponseType(typeof(User))]
+        [ActionName("GetUser")]
+        [HttpGet]
+        [Route("GetUser", Name = "GetUser")]
+        [AllowAnonymous]
         public async Task<IHttpActionResult> GetUser(string EmailAddress)
         {
             User user = await db.User.FindAsync(EmailAddress);

@@ -9,9 +9,7 @@ app.controller('UserLoginController', ['$scope', '$location', 'authService', 'ng
 
     $scope.message = "";
 
-    $scope.login = function () {
-
-        alert("in");
+    $scope.login = function () {        
         authService.Userlogin($scope.loginData).then(function (response) {
 
             $location.path('/orders');

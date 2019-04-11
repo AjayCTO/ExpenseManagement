@@ -48,6 +48,11 @@ app.config(function ($routeProvider) {
         templateUrl: "/app/views/UserLogin.html"
     });
 
+    $routeProvider.when("/Test", {
+        controller: "TestController",
+        templateUrl: "/app/views/Test.html"
+    });
+
     $routeProvider.otherwise({ redirectTo: "/home" });
 
 });

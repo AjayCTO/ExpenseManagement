@@ -42,9 +42,9 @@ app.factory('authService', ['$http', '$q', 'localStorageService', 'ngAuthSetting
 
     var _Userlogin = function (loginData) {
 
-        alert("in get");
+        alert(loginData.EmailAddress);
 
-        return $http.get(serviceBase + 'api/User/GetUser', loginData).then(function (response) {
+        return $http.get(serviceBase + 'api/User/GetUser', { params: { EmailAddress: loginData.EmailAddress } }).then(function (response) {
 
             console.log("=============response=============")
             console.log(response)
